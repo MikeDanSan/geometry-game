@@ -1,10 +1,12 @@
 import unittest
 from main import Point
+from main import Rectangle
 
 class TestPoint(unittest.TestCase):
 
     def setUp(self):
         self.point = Point(2, 8)
+        self.rectangle = Rectangle(Point(1, 1), Point(3, 10))
 
     def test_point_creation(self):
         self.assertIsInstance(self.point, Point, "Object should be an instance of Point class.")
@@ -16,14 +18,11 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(self.point.y, 8, "Attribute y should be equal to 8.")
 
     def test_falls_in_rectangle_true(self):
-        lower_left = (1, 1)
-        upper_right = (3, 10)
-        self.assertTrue(self.point.falls_in_rectangle(lower_left, upper_right), "Point should fall within rectangle.")
+        self.assertTrue(self.point.falls_in_rectangle(self.rectangle), "Point should fall within rectangle.")
 
     def test_falls_in_rectangle_false(self):
-        lower_left = (3, 9)
-        upper_right = (10, 20)
-        self.assertFalse(self.point.falls_in_rectangle(lower_left, upper_right), "Point should not fall within rectangle.")
+        outside_rectangle = Rectangle(Point(3, 9), Point(10, 20))
+        self.assertFalse(self.point.falls_in_rectangle(outside_rectangle), "Point should not fall within rectangle.")
 
     def test_distance_from_point(self):
         other_point = Point(5, 10)
@@ -38,6 +37,13 @@ class TestPoint(unittest.TestCase):
         negative_point = Point(-2, -3)
         expected_distance = ((2 - (-2))**2 + (8 - (-3))**2) ** 0.5
         self.assertEqual(self.point.distance_from_point(negative_point), expected_distance, "Distance calculation with negative coordinates is incorrect.")
+
+    def test_rectangle_creation(self):
+        self.assertIsInstance(self.rectangle, Rectangle, "Object should be an instance of Rectangle class.")
+
+    def test_rectangle_area(self):
+        expected_area = 2 * 9  # (3-1) * (10-1)
+        self.assertEqual(self.rectangle.area(), expected_area, "Area calculation is incorrect.")
 
 if __name__ == '__main__':
     unittest.main()
